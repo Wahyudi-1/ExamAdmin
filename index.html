@@ -5,36 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Admin Ujian Sekolah</title>
     
-    <!-- 1. STYLE: Bootstrap & Icon -->
+    <!-- 1. STYLE -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     
-    <!-- 2. LIBRARY: Supabase -->
+    <!-- 2. LIBRARY SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- 3. CUSTOM CSS -->
+    <!-- 3. CSS -->
     <style>
         body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
         .login-card { max-width: 400px; margin: 100px auto; }
-        .navbar-brand { font-weight: bold; letter-spacing: 1px; }
         
-        /* Status Badges */
         .badge-blocked { background-color: #dc3545; animation: blink 1s infinite; }
         .badge-active { background-color: #198754; }
         .badge-finished { background-color: #6c757d; }
-        
         @keyframes blink { 50% { opacity: 0.5; } }
         
-        /* Tab Navigation */
         .nav-pills .nav-link.active { background-color: #0d6efd; }
-        .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
-    <!-- ======================= -->
-    <!-- BAGIAN 1: LOGIN SCREEN  -->
-    <!-- ======================= -->
+    <!-- LOGIN SCREEN -->
     <div id="login-view" class="container">
         <div class="card login-card p-4">
             <h3 class="text-center mb-4">🔐 Login Admin</h3>
@@ -51,12 +44,8 @@
         </div>
     </div>
 
-    <!-- ======================= -->
-    <!-- BAGIAN 2: DASHBOARD     -->
-    <!-- ======================= -->
+    <!-- DASHBOARD -->
     <div id="dashboard-view" style="display: none;">
-        
-        <!-- Navbar -->
         <nav class="navbar navbar-dark bg-primary px-4 shadow-sm">
             <span class="navbar-brand"><i class="bi bi-shield-lock"></i> Secure Exam Admin</span>
             <div>
@@ -66,105 +55,74 @@
         </nav>
 
         <div class="container mt-4">
-            
-            <!-- Menu Tabs -->
+            <!-- Tabs -->
             <ul class="nav nav-pills mb-4 bg-white p-2 rounded shadow-sm" id="pills-tab" role="tablist">
                 <li class="nav-item">
-                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-monitor" type="button" onclick="fetchMonitoring()">
-                        <i class="bi bi-activity"></i> Monitoring Live
-                    </button>
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-monitor" type="button" onclick="fetchMonitoring()">Monitoring</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-exams" type="button" onclick="fetchExams()">
-                        <i class="bi bi-file-earmark-text"></i> Bank Soal
-                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-exams" type="button" onclick="fetchExams()">Bank Soal</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-students" type="button" onclick="fetchStudents()">
-                        <i class="bi bi-people"></i> Data Siswa
-                    </button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-students" type="button" onclick="fetchStudents()">Data Siswa</button>
                 </li>
             </ul>
 
             <!-- Isi Tabs -->
             <div class="tab-content">
-                
-                <!-- TAB 1: MONITORING LIVE -->
+                <!-- MONITORING -->
                 <div class="tab-pane fade show active" id="tab-monitor">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5><span class="badge bg-success" id="realtime-badge">Connected</span> Status Siswa</h5>
-                        <button onclick="fetchMonitoring()" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5>Status Siswa Live</h5>
+                        <button onclick="fetchMonitoring()" class="btn btn-sm btn-secondary">Refresh</button>
                     </div>
-                    <div class="card p-0 overflow-hidden">
-                        <table class="table table-hover mb-0 align-middle">
+                    <div class="card p-0">
+                        <table class="table table-hover mb-0">
                             <thead class="table-light">
-                                <tr>
-                                    <th>Nama Siswa</th>
-                                    <th>Ujian</th>
-                                    <th>Waktu Update</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
+                                <tr><th>Nama</th><th>Ujian</th><th>Waktu</th><th>Status</th><th>Aksi</th></tr>
                             </thead>
-                            <tbody id="monitor-table-body">
-                                <!-- Data masuk lewat JS -->
-                            </tbody>
+                            <tbody id="monitor-table-body"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- TAB 2: BANK SOAL -->
+                <!-- BANK SOAL -->
                 <div class="tab-pane fade" id="tab-exams">
                     <div class="row">
-                        <!-- Form Tambah -->
                         <div class="col-md-4">
                             <div class="card p-3 mb-3">
-                                <h6>Tambah Ujian Baru</h6>
-                                <hr>
-                                <input type="text" id="exam-title" class="form-control mb-2" placeholder="Judul (Misal: MTK Kelas 10)">
-                                <input type="text" id="exam-link" class="form-control mb-2" placeholder="Link Google Form">
-                                <input type="text" id="exam-token" class="form-control mb-2 fw-bold text-uppercase" placeholder="TOKEN (Misal: ABC-123)">
-                                <button onclick="createExam()" class="btn btn-primary w-100">Simpan Ujian</button>
+                                <h6>Tambah Ujian</h6>
+                                <input type="text" id="exam-title" class="form-control mb-2" placeholder="Judul">
+                                <input type="text" id="exam-link" class="form-control mb-2" placeholder="Link Form">
+                                <input type="text" id="exam-token" class="form-control mb-2" placeholder="TOKEN">
+                                <button onclick="createExam()" class="btn btn-primary w-100">Simpan</button>
                             </div>
                         </div>
-                        <!-- List Soal -->
                         <div class="col-md-8">
                             <div class="card p-0">
-                                <table class="table table-striped mb-0">
-                                    <thead class="table-light"><tr><th>Judul</th><th>Token</th><th>Link</th><th>Hapus</th></tr></thead>
-                                    <tbody id="exam-table-body"></tbody>
-                                </table>
+                                <table class="table mb-0"><tbody id="exam-table-body"></tbody></table>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB 3: DATA SISWA -->
+                <!-- DATA SISWA -->
                 <div class="tab-pane fade" id="tab-students">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="card p-3 mb-3 bg-light border-warning">
-                                <h6 class="text-dark">Registrasi Siswa Baru</h6>
-                                <small class="text-muted d-block mb-2">Password default disarankan sama untuk semua, nanti bisa diganti.</small>
-                                <hr>
-                                <input type="text" id="std-name" class="form-control mb-2" placeholder="Nama Lengkap">
-                                <input type="email" id="std-email" class="form-control mb-2" placeholder="Email / NIS (ex: 123@sekolah.id)">
+                            <div class="card p-3 mb-3 border-warning">
+                                <h6>Daftar Siswa Baru</h6>
+                                <input type="text" id="std-name" class="form-control mb-2" placeholder="Nama">
+                                <input type="email" id="std-email" class="form-control mb-2" placeholder="Email">
                                 <input type="password" id="std-pass" class="form-control mb-2" placeholder="Password">
-                                <button onclick="createStudent()" class="btn btn-warning w-100 fw-bold">Daftarkan Siswa</button>
+                                <button onclick="createStudent()" class="btn btn-warning w-100">Daftarkan</button>
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <div class="card p-3">
-                                <h6>Daftar Akun Siswa</h6>
-                                <table class="table table-sm">
-                                    <thead><tr><th>Nama</th><th>Email</th><th>Role</th></tr></thead>
-                                    <tbody id="student-table-body"></tbody>
-                                </table>
-                            </div>
+                            <div class="card p-3"><table class="table"><tbody id="student-table-body"></tbody></table></div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -172,53 +130,45 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- ======================= -->
-    <!-- BAGIAN 3: LOGIKA JS     -->
-    <!-- ======================= -->
+    <!-- ========================================= -->
+    <!-- LOGIKA JAVASCRIPT -->
+    <!-- ========================================= -->
     <script>
-        // ============================================
-        // 1. KONFIGURASI 
-        // HANYA EDIT BAGIAN INI DENGAN DATA ASLI ANDA
-        // JANGAN ADA KODE "const supabase =" LAINNYA SELAIN DI BAWAH INI
-        // ============================================
-        
-        const SUPABASE_URL = 'https://patjsszankjdlnktrfmh.supabase.co'; 
-        const ANON_KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhdGpzc3phbmtqZGxua3RyZm1oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3NzEzODUsImV4cCI6MjA2OTM0NzM4NX0.eZLV-7HbhQMFS3EF4e-Q5UuPRKVssgirL1cQxj7yJEg'; 
-        const SERVICE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhdGpzc3phbmtqZGxua3RyZm1oIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Mzc3MTM4NSwiZXhwIjoyMDY5MzQ3Mzg1fQ.Xo3JynOBufjcAuHjN3mK4pAIC7xnEraAm0TuehhSRWg'; 
+        // --- KONFIGURASI SUPABASE ANDA ---
+        const MY_SUPABASE_URL = 'https://patjsszankjdlnktrfmh.supabase.co'; 
+        const MY_ANON_KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhdGpzc3phbmtqZGxua3RyZm1oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3NzEzODUsImV4cCI6MjA2OTM0NzM4NX0.eZLV-7HbhQMFS3EF4e-Q5UuPRKVssgirL1cQxj7yJEg'; 
+        const MY_SERVICE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhdGpzc3phbmtqZGxua3RyZm1oIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Mzc3MTM4NSwiZXhwIjoyMDY5MzQ3Mzg1fQ.Xo3JynOBufjcAuHjN3mK4pAIC7xnEraAm0TuehhSRWg'; 
 
-        // ============================================
-        
-        // Inisialisasi Client (Pastikan ini satu-satunya deklarasi)
-        const supabase = window.supabase.createClient(SUPABASE_URL, ANON_KEY);
-        // Client Khusus Admin (untuk create user)
-        const supabaseAdmin = window.supabase.createClient(SUPABASE_URL, SERVICE_KEY);
+        // Inisialisasi dengan nama variabel unik "dbClient"
+        const dbClient = window.supabase.createClient(MY_SUPABASE_URL, MY_ANON_KEY);
+        // Client khusus admin dengan Service Key
+        const adminClient = window.supabase.createClient(MY_SUPABASE_URL, MY_SERVICE_KEY);
 
-        // ============================================
-        // 2. AUTHENTICATION
-        // ============================================
+        // --- AUTH ---
         async function doLogin() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            // Menggunakan dbClient
+            const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
+            
             if (error) {
-                document.getElementById('login-error').innerText = "Login Gagal: " + error.message;
+                document.getElementById('login-error').innerText = "Error: " + error.message;
             } else {
-                checkUserRole();
+                checkRole();
             }
         }
 
         async function doLogout() {
-            await supabase.auth.signOut();
+            await dbClient.auth.signOut();
             window.location.reload();
         }
 
-        async function checkUserRole() {
-            const { data: { user } } = await supabase.auth.getUser();
+        async function checkRole() {
+            const { data: { user } } = await dbClient.auth.getUser();
             if (!user) return;
 
-            // Cek apakah dia Admin?
-            const { data: profile } = await supabase
+            const { data: profile } = await dbClient
                 .from('profiles')
                 .select('role, full_name')
                 .eq('id', user.id)
@@ -228,180 +178,104 @@
                 document.getElementById('login-view').style.display = 'none';
                 document.getElementById('dashboard-view').style.display = 'block';
                 document.getElementById('admin-name').innerText = profile.full_name || user.email;
-                
-                // Mulai Monitoring Otomatis
                 fetchMonitoring();
                 subscribeRealtime();
             } else {
-                alert("Anda bukan Admin! Akses ditolak.");
-                await supabase.auth.signOut();
+                alert("Login berhasil, tapi Anda bukan Admin! Akses ditolak.");
+                await dbClient.auth.signOut();
             }
         }
+        checkRole(); // Cek saat load
 
-        // Cek sesi saat refresh
-        checkUserRole();
-
-        // ============================================
-        // 3. FITUR: MONITORING & UNLOCK
-        // ============================================
+        // --- MONITORING ---
         async function fetchMonitoring() {
             const tbody = document.getElementById('monitor-table-body');
-            
-            // Ambil data session + relasi profile + relasi exam
-            const { data: sessions, error } = await supabase
+            const { data: sessions } = await dbClient
                 .from('sessions')
-                .select(`
-                    id, status, updated_at,
-                    profiles:user_id ( full_name ),
-                    exams:exam_id ( title )
-                `)
+                .select(`id, status, updated_at, profiles:user_id(full_name), exams:exam_id(title)`)
                 .order('updated_at', { ascending: false });
 
-            if (error) console.error(error);
-            
             tbody.innerHTML = '';
             if (sessions) {
                 sessions.forEach(s => {
-                    let badgeClass = 'bg-secondary';
-                    let statusText = s.status;
-                    let actionBtn = '-';
-
-                    if (s.status === 'active') {
-                        badgeClass = 'badge-active';
-                        statusText = 'Mengerjakan';
-                    } else if (s.status === 'blocked') {
-                        badgeClass = 'badge-blocked';
-                        statusText = 'TERKUNCI';
-                        actionBtn = `<button onclick="unlockStudent('${s.id}')" class="btn btn-sm btn-warning fw-bold">🔓 BUKA</button>`;
-                    } else if (s.status === 'finished') {
-                        badgeClass = 'badge-finished';
-                        statusText = 'Selesai';
+                    let badge = 'bg-secondary';
+                    let btn = '-';
+                    if (s.status === 'active') badge = 'badge-active';
+                    if (s.status === 'blocked') {
+                        badge = 'badge-blocked';
+                        btn = `<button onclick="unlockStudent('${s.id}')" class="btn btn-sm btn-warning">BUKA</button>`;
                     }
-
-                    const row = `
-                        <tr>
-                            <td class="fw-bold">${s.profiles?.full_name || 'Tanpa Nama'}</td>
-                            <td>${s.exams?.title || 'Unknown'}</td>
-                            <td><small>${new Date(s.updated_at).toLocaleTimeString()}</small></td>
-                            <td><span class="badge ${badgeClass}">${statusText}</span></td>
-                            <td>${actionBtn}</td>
-                        </tr>
-                    `;
-                    tbody.innerHTML += row;
+                    tbody.innerHTML += `<tr>
+                        <td>${s.profiles?.full_name || 'X'}</td>
+                        <td>${s.exams?.title || 'X'}</td>
+                        <td>${new Date(s.updated_at).toLocaleTimeString()}</td>
+                        <td><span class="badge ${badge}">${s.status}</span></td>
+                        <td>${btn}</td>
+                    </tr>`;
                 });
             }
         }
 
-        async function unlockStudent(sessionId) {
-            if(confirm('Buka akses siswa ini?')) {
-                await supabase.from('sessions').update({ status: 'active' }).eq('id', sessionId);
-                // Tidak perlu refresh, realtime akan menangani
-            }
+        async function unlockStudent(id) {
+            if(confirm('Buka akses siswa ini?')) await dbClient.from('sessions').update({ status: 'active' }).eq('id', id);
         }
 
         function subscribeRealtime() {
-            supabase.channel('admin-dashboard')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'sessions' }, () => {
-                    fetchMonitoring(); // Refresh tabel otomatis jika ada update
-                })
+            dbClient.channel('admin-dash')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'sessions' }, fetchMonitoring)
                 .subscribe();
         }
 
-        // ============================================
-        // 4. FITUR: MANAJEMEN UJIAN
-        // ============================================
+        // --- UJIAN ---
         async function fetchExams() {
-            const { data: exams } = await supabase.from('exams').select('*').order('created_at', { ascending: false });
+            const { data: exams } = await dbClient.from('exams').select('*').order('created_at', { ascending: false });
             const tbody = document.getElementById('exam-table-body');
             tbody.innerHTML = '';
-            
             exams.forEach(e => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${e.title}</td>
-                        <td><span class="badge bg-dark">${e.token}</span></td>
-                        <td><a href="${e.link_url}" target="_blank" class="text-decoration-none">Link 🔗</a></td>
-                        <td><button onclick="deleteExam('${e.id}')" class="btn btn-sm btn-outline-danger">X</button></td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td>${e.title}</td><td>${e.token}</td><td>Link OK</td><td><button onclick="delExam('${e.id}')" class="btn btn-danger btn-sm">X</button></td></tr>`;
             });
         }
-
         async function createExam() {
             const title = document.getElementById('exam-title').value;
             const link = document.getElementById('exam-link').value;
             const token = document.getElementById('exam-token').value;
-
-            if(!title || !link || !token) return alert("Isi semua data!");
-
-            const { error } = await supabase.from('exams').insert([{ title, link_url: link, token }]);
-            if(error) alert(error.message);
-            else {
-                alert("Ujian berhasil dibuat!");
-                document.getElementById('exam-title').value = '';
+            if(title) {
+                await dbClient.from('exams').insert([{ title, link_url: link, token }]);
+                fetchExams();
+                alert("Ujian Tersimpan");
+            }
+        }
+        async function delExam(id) {
+            if(confirm('Hapus ujian ini?')) {
+                await dbClient.from('exams').delete().eq('id', id);
                 fetchExams();
             }
         }
 
-        async function deleteExam(id) {
-            if(confirm("Hapus ujian ini?")) {
-                await supabase.from('exams').delete().eq('id', id);
-                fetchExams();
-            }
-        }
-
-        // ============================================
-        // 5. FITUR: MANAJEMEN SISWA (REGISTRASI)
-        // ============================================
+        // --- SISWA ---
         async function createStudent() {
             const email = document.getElementById('std-email').value;
             const password = document.getElementById('std-pass').value;
             const name = document.getElementById('std-name').value;
-
-            if(!email || !password) return alert("Email dan Password wajib diisi!");
-
-            // Gunakan supabaseAdmin (Service Key) agar admin tidak ter-logout
-            const { data, error } = await supabaseAdmin.auth.admin.createUser({
-                email: email,
-                password: password,
-                email_confirm: true, // Otomatis verifikasi
-                user_metadata: { full_name: name }
-            });
-
-            if (error) {
-                alert("Gagal: " + error.message);
-            } else {
-                alert("Siswa Berhasil Didaftarkan: " + email);
-                document.getElementById('std-email').value = '';
-                document.getElementById('std-name').value = '';
-                fetchStudents();
+            if(email && password) {
+                // Menggunakan adminClient (Service Key) untuk bypass login
+                const { error } = await adminClient.auth.admin.createUser({
+                    email, password, email_confirm: true, user_metadata: { full_name: name }
+                });
+                if(error) alert("Gagal: " + error.message);
+                else { alert("Siswa Berhasil Didaftarkan!"); fetchStudents(); }
             }
         }
-
         async function fetchStudents() {
-            // Kita ambil dari tabel profiles
-            const { data: profiles } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('role', 'student') // Hanya tampilkan siswa
-                .order('full_name', { ascending: true });
-
+            const { data: profiles } = await dbClient.from('profiles').select('*').eq('role', 'student');
             const tbody = document.getElementById('student-table-body');
             tbody.innerHTML = '';
-
-            if (profiles) {
+            if(profiles) {
                 profiles.forEach(p => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${p.full_name || 'Tanpa Nama'}</td>
-                            <td>(Email Hidden)</td> 
-                            <td><span class="badge bg-info text-dark">${p.role}</span></td>
-                        </tr>
-                    `;
+                    tbody.innerHTML += `<tr><td>${p.full_name}</td><td>Siswa</td><td>Aktif</td></tr>`;
                 });
             }
         }
-
     </script>
 </body>
 </html>

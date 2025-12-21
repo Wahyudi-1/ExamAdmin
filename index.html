@@ -177,13 +177,18 @@
     <!-- ======================= -->
     <script>
         // ============================================
-        // 1. KONFIGURASI (ISI DATA ANDA DI SINI !!!)
+        // 1. KONFIGURASI 
+        // HANYA EDIT BAGIAN INI DENGAN DATA ASLI ANDA
+        // JANGAN ADA KODE "const supabase =" LAINNYA SELAIN DI BAWAH INI
         // ============================================
-        const SUPABASE_URL = 'https://xxxxxxxx.supabase.co'; // GANTI INI
-        const ANON_KEY     = 'eyJxhbGciOiJIUzI1NiIsInR...'; // GANTI INI (Public Key)
-        const SERVICE_KEY  = 'eyJxhbGciOiJIUzI1NiIsInR...'; // GANTI INI (Service Role Key - KHUSUS ADMIN)
+        
+        const SUPABASE_URL = 'MASUKKAN_URL_SUPABASE_DISINI'; 
+        const ANON_KEY     = 'MASUKKAN_KEY_ANON_PUBLIC_DISINI'; 
+        const SERVICE_KEY  = 'MASUKKAN_KEY_SERVICE_ROLE_DISINI'; 
 
-        // Inisialisasi Client
+        // ============================================
+        
+        // Inisialisasi Client (Pastikan ini satu-satunya deklarasi)
         const supabase = window.supabase.createClient(SUPABASE_URL, ANON_KEY);
         // Client Khusus Admin (untuk create user)
         const supabaseAdmin = window.supabase.createClient(SUPABASE_URL, SERVICE_KEY);
@@ -386,9 +391,6 @@
 
             if (profiles) {
                 profiles.forEach(p => {
-                    // Note: Email ada di auth.users, tapi kita tidak bisa join auth.users dengan mudah di client side.
-                    // Trik: Kita tampilkan nama saja, atau jika email disimpan di metadata bisa ditampilkan.
-                    // Untuk simplisitas, kita tampilkan Nama & Role.
                     tbody.innerHTML += `
                         <tr>
                             <td>${p.full_name || 'Tanpa Nama'}</td>
